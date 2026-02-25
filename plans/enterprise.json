@@ -1,0 +1,67 @@
+{
+    "_id": { "$oid": "629f63562193807887579860" },
+    "name": "Enterprise",
+    "prices": { "year": [], "month": [] },
+    "b2c": {
+        "marketingSuite": [
+            "Custom Reporting",
+            "Custom Mailserver Domain",
+            "Custom Domain",
+            "Free Design Services",
+            "Unlimited Email Design Testing",
+            "Social Data Enrichment",
+            "Custom Objects"
+        ],
+        "salesSuite": ["Custom Reporting", "Contact Enrichment", "Custom Objects"],
+        "serviceSuite": ["Custom Reporting", "Contact Enrichment", "Custom Object"],
+        "platformAndSupport": [
+            "Unlimited Users",
+            "Onboarding and training for custom product functionality",
+            "Phone Support",
+            "Customize Your Application URL (for Application Access)",
+            "Customized Branding within Application",
+            "HIPAA Support"
+        ]
+    },
+    "b2b": {
+        "marketingSuite": [
+            "Custom Marketing Reporting",
+            "Custom Domain",
+            "Contact Enrichment",
+            "Unlimited Email Testing",
+            "Free Design Services",
+            "Custom Objects"
+        ],
+        "salesSuite": ["Custom Sales Reporting", "Contact Enrichment", "Custom Objects"],
+        "serviceSuite": ["Social Data Enrichment", "Custom Service Reporting", "Custom Objects"],
+        "platformAndSupport": [
+            "Unlimited Users",
+            "Onboarding and training for custom product functionality",
+            "Phone Support",
+            "Customize Your Application URL (for Application Access)",
+            "Customized Branding within Application",
+            "HIPAA Support"
+        ]
+    },
+    "ecommerce": {
+        "marketingSuite": [
+            "Custom Reporting",
+            "Custom Domain",
+            "Free Design Services",
+            "Contact Enrichment",
+            "Unlimited Email Testing",
+            "Custom Mailserver Domain",
+            "Custom Objects"
+        ],
+        "salesSuite": ["Custom Sales Reporting", "Social Data Enrichment", "Custom Objects"],
+        "serviceSuite": ["Custom Reporting", "SSO", "Custom Objects"],
+        "platformAndSupport": [
+            "Unlimited Users",
+            "Onboarding and training for custom product functionality",
+            "Phone Support",
+            "Customize Your Application URL",
+            "Customized Branding Within Application",
+            "HIPAA Support"
+        ]
+    }
+}

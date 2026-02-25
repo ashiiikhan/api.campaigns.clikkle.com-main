@@ -1,0 +1,91 @@
+{
+    "_id": { "$oid": "629f6331219380788757985f" },
+    "name": "Professional",
+    "prices": { "year": [149, 149, 149, 209, 339, 549], "month": [187, 187, 187, 262, 424, 686] },
+    "b2c": {
+        "marketingSuite": [
+            "Website Personalization",
+            "Predictive Sending",
+            "Predictive Content",
+            "Marketing Attribution",
+            "Split Automations",
+            "Attribution Reporting",
+            "Site Messages"
+        ],
+        "salesSuite": [
+            "Sales Engagement Automation",
+            "Win Probability",
+            "Conversion Reporting",
+            "Split Automations"
+        ],
+        "serviceSuite": [
+            "Split Automations",
+            "Personalized Product Experiences",
+            "Conversion Reporting",
+            "In-App Messaging"
+        ],
+        "platformAndSupport": [
+            "Unlimited Users",
+            "Onboarding and training for custom product functionality",
+            "Phone Support",
+            "Customize Your Application URL (for Application Access)",
+            "Customized Branding within Application",
+            "HIPAA Support"
+        ]
+    },
+    "b2b": {
+        "marketingSuite": [
+            "Predictive Sending",
+            "Predictive Content",
+            "Marketing Attribution",
+            "Split Automations",
+            "Site Messages",
+            "Conversion Reporting",
+            "Website Personalization"
+        ],
+        "salesSuite": [
+            "Sales Engagement Automation",
+            "Win Probability",
+            "Conversion Reporting",
+            "Split Automations",
+            "Sentiment Analysis",
+            "Salesforce Integration",
+            "Microsoft Dynamics 365 Integration"
+        ],
+        "serviceSuite": [
+            "Split Automations",
+            "Conversion Reporting",
+            "Personalized Product Experiences",
+            "In-App Messaging"
+        ],
+        "platformAndSupport": [
+            "Up to 50 Users",
+            "Dedicated Onboarding",
+            "CXA Strategy Consultation and access to quarterly business reviews",
+            "1:1 trainings"
+        ]
+    },
+    "ecommerce": {
+        "marketingSuite": [
+            "Personalized Product Experiences",
+            "Predictive Sending",
+            "Predictive Content",
+            "Site Messages",
+            "Attribution Reporting",
+            "Split Automations"
+        ],
+        "salesSuite": [
+            "Sales Engagement Automation",
+            "Win Probability",
+            "Conversion Reporting",
+            "Split Automations"
+        ],
+        "serviceSuite": ["Website Personalization", "Conversion Reporting", "In-App Messaging"],
+        "platformAndSupport": [
+            "Up to 50 Users",
+            "Dedicated Onboarding",
+            "CXA Strategy Consultation and access to quarterly business reviews",
+            "1:1 trainings"
+        ]
+    }
+}

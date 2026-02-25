@@ -1,0 +1,90 @@
+{
+    "_id": { "$oid": "629f5f3d219380788757985d" },
+    "name": "Lite",
+    "prices": {
+        "year": [9, 29, 49, 79, 139, 229, 339, 449, 549],
+        "month": [15, 30, 61, 99, 174, 286, 424, 561, 687]
+    },
+    "b2c": {
+        "marketingSuite": [
+            "Marketing Automation",
+            "Email Marketing",
+            "Unlimited Email Sending",
+            "Drag & Drop Email Builder",
+            "125+ Email Templates",
+            "Send Newsletters",
+            "Subscription Forms",
+            "Segmentation",
+            "Site and Event Tracking",
+            "Campaign and Automation Reporting"
+        ],
+        "salesSuite": ["Sales Emails", "Import leads", "Lead Capture Forms", "Segmented Outreach"],
+        "serviceSuite": ["Customer Newsletter", "Customer Analytics"],
+        "platformAndSupport": [
+            "1 User",
+            "Import Contacts",
+            "Chat and Email Support",
+            "Unlimited access to online resources library",
+            "Mobile Contact Management & Marketing Access",
+            "Integrate to Over 870 CXA Partners",
+            "500+ Automation Recipes",
+            "Unlimited Inactive Contacts",
+            "APIs, Webhooks, and Developer Tools"
+        ]
+    },
+    "b2b": {
+        "marketingSuite": [
+            "125+ Email Templates",
+            "Marketing Automation",
+            "Lead Generation Forms",
+            "Lead Tracking",
+            "Email Design Testing",
+            "Campaign & Automation Reporting"
+        ],
+        "salesSuite": [
+            "Import Leads From Anywhere",
+            "Sales Emails",
+            "Segmented Outreach",
+            "Lead Capture Forms",
+            "Email Autoresponders"
+        ],
+        "serviceSuite": ["Agent Routing for Inbound"],
+        "platformAndSupport": [
+            "1 User",
+            "Chat and Email Support",
+            "Unlimited access to online resources library",
+            "500+ Automation Recipes",
+            "Integrate with Over 870 CXA Partners",
+            "APIs, Webhooks, and Developer Tools",
+            "Unlimited inactive contacts"
+        ]
+    },
+    "ecommerce": {
+        "marketingSuite": [
+            "Marketing Automation",
+            "Email Marketing",
+            "Unlimited Email Sending",
+            "125+ Email Templates",
+            "Drag and Drop Email Builder",
+            "Subscription Forms",
+            "Segmentation",
+            "Email and Automation Reporting",
+            "Site and Event Tracking"
+        ],
+        "salesSuite": [
+            "ecommerce Sales Automation",
+            "Import Existing Customer List",
+            "Advanced Segmentation"
+        ],
+        "serviceSuite": ["Customer Newsletters", "Customer Analytics"],
+        "platformAndSupport": [
+            "1 User",
+            "Chat and Email Support",
+            "Unlimited access to online resources library",
+            "500+ Automation Recipes",
+            "870+ Integrations",
+            "APIs, Webhooks, & Dev Tools",
+            "Unlimited Inactive Contacts"
+        ]
+    }
+}

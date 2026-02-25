@@ -1,0 +1,103 @@
+{
+    "_id": { "$oid": "629f629a219380788757985e" },
+    "name": "Plus",
+    "prices": { "year": [49, 49, 99, 149, 229, 379], "month": [70, 70, 125, 186, 287, 474] },
+    "b2c": {
+        "marketingSuite": [
+            "Landing Pages",
+            "50+ Landing Page Templates",
+            "Facebook Custom Audiences",
+            "Contact Scoring",
+            "SMS Marketing",
+            "Automations Map",
+            "Conditional Content",
+            "Advanced Performance Reporting",
+            "Custom Branded Forms and Landing Pages"
+        ],
+        "salesSuite": [
+            "CRM with Sales Automation",
+            "Lead Scoring",
+            "Sync Inbox with CRM",
+            "Mobile CRM App",
+            "SMS Prospect Nurturing",
+            "Task Reporting"
+        ],
+        "serviceSuite": [
+            "Sales CRM Sync",
+            "SMS Service Followup",
+            "Deal Assignment",
+            "Customer Success Pipelines",
+            "Account Management",
+            "Customer Health Scoring"
+        ],
+        "platformAndSupport": [
+            "Up to 25 Users",
+            "Advanced Mobile Reporting",
+            "Custom User Permissions",
+            "Advanced Integrations with Leading E-commerce Applications Such as Shopify and BigCommerc"
+        ]
+    },
+    "b2b": {
+        "marketingSuite": [
+            "Landing Pages",
+            "50+ Landing Page Templates",
+            "Facebook Custom Audiences",
+            "SMS Marketing",
+            "Conditional Content",
+            "Advanced Performance Reporting"
+        ],
+        "salesSuite": [
+            "Sales Automation",
+            "Import Deals and Accounts from Anywhere",
+            "Multiple Pipelines in the CRM",
+            "Customizable Sales Pipelines",
+            "Lead Scoring",
+            "Sync Inbox with CRM",
+            "Mobile CRM App"
+        ],
+        "serviceSuite": [
+            "Sales CRM Sync",
+            "Account management pipelines",
+            "Deal Assignment",
+            "Customer Health Scoring"
+        ],
+        "platformAndSupport": [
+            "Up to 25 Users",
+            "Advanced Mobile Reporting",
+            "Custom User Permissions",
+            "Database sync"
+        ]
+    },
+    "ecommerce": {
+        "marketingSuite": [
+            "Product Blocks",
+            "Custom ecommerce Integrations",
+            "Product Landing Pages",
+            "50+ Landing Page Templates",
+            "Facebook Custom Audiences",
+            "Contact Scoring",
+            "ecommerce Dashboard",
+            "Marketing Revenue Report"
+        ],
+        "salesSuite": [
+            "Custom Order Management",
+            "Customer Scoring",
+            "Deals Reporting Dashboard",
+            "Mobile CRM App",
+            "Revenue Reporting"
+        ],
+        "serviceSuite": [
+            "SMS Customer Follow ups",
+            "Customer Issue Assignment",
+            "Customer Health Scoring",
+            "Customer Service Management"
+        ],
+        "platformAndSupport": [
+            "Up to 25 Users",
+            "Advanced Mobile Reporting",
+            "Custom User Permissions",
+            "Free Strategy Session Call",
+            "Database Sync"
+        ]
+    }
+}
