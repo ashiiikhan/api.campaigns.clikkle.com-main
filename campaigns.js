@@ -15,6 +15,7 @@ import https from "https";
 import userRouter from "./routers/user.js";
 import adminRouter from "./routers/admin.js";
 import unauthorizedRouter from "./routers/unauthorized.js";
+import emailRouter from "./routers/email.js";
 
 // -------------- Middlewares -------------- //
 import authenticate from "./middleware/authenticate.js";
