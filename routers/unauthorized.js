@@ -7,6 +7,7 @@ import getAllPlans from "../routes/unauthorized/plan.js";
 import verifyUser from "../routes/unauthorized/verifyUser.js";
 import resetPassword from "../routes/unauthorized/resetPassword.js";
 import createPassword from "../routes/unauthorized/createPassword.js";
+import unsubscribe from "../routes/unauthorized/unsubscribe.js";
 
 
 const testc = (req,res,next) => {
