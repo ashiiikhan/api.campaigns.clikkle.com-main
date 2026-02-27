@@ -26,5 +26,6 @@ unauthorizedRouter.get("/plans", getAllPlans);
 unauthorizedRouter.get("/verify/:token", verifyUser);
 unauthorizedRouter.post("/reset-password", resetPassword);
 unauthorizedRouter.post("/create-password", createPassword);
+unauthorizedRouter.get("/u/:token", unsubscribe);
 
 export default unauthorizedRouter;

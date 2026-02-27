@@ -1,4 +1,5 @@
 import "./config/config.js";
+import "./workers/emailWorker.js"; // Start Email Worker
 import express from "express";
 import cors from "cors";
 import path from "path";
@@ -79,6 +80,7 @@ app.use(unauthorizedRouter);
 // Protected Routes (with Authentication Middleware)
 app.use("/user", authenticate, userRouter);
 app.use("/admin", authenticate, adminRouter);
+app.use("/email", emailRouter); // Test endpoint, maybe protect later
 
 // Basic Home Route
 app.get("/", (req, res) => {

@@ -1,21 +1,16 @@
 import Campaign from '../../../schemas/Campaign.js';
 import Segment from '../../../schemas/Segment.js';
 import Tag from '../../../schemas/Tag.js';
+import User from '../../../schemas/User.js'; // Import User schema
 import { pushNotification } from '../../../utilities/functions.js';
-// import Queue from 'bull';
-
-// const emailQueue = new Queue('emails');
-// emailQueue.process(async (job, done) => {
-// 	done(null, 'Email sent')
-// });
-
-// emailQueue.on('completed', function (job, result) {
-// 	console.log(job, result)
-// })
+import emailQueue from '../../../queues/emailQueue.js';
 
 async function send(req, res, next) {
 	try {
 		const userId = req.user.id;
+		const user = await User.findById(userId); // Fetch User
+		if (!user) throw new Error('User not found');
+		
 		const campaignId = req.params.id;
 
 		const campaign = await Campaign.findOne({
@@ -49,18 +44,23 @@ async function send(req, res, next) {
 		}
 
 		const templateMappings = campaign.templateMappings;
-		// for (let i = 0; i < contacts.length; i++) {
-		// 	await emailQueue.add({
-		// 		to: contacts[i], // whole contact object
-		// 		from: campaign.from,
-		// 		subject: campaign.subject || campaign.previewText,
-		// 		contentHtml: campaign.template.templateHtml.replace(
-		// 			/{{\s*(\w+)\s*}}/g,
-		// 			(_, placeholder) => contacts[i][templateMappings[placeholder]] || ''
-		// 		),
-		// 		contentText: campaign.previewText,
-		// 	});
-		// }
+		for (let i = 0; i < contacts.length; i++) {
+			await emailQueue.add({
+				to: contacts[i].email || contacts[i], // Ensure email is passed
+				from: campaign.from,
+				subject: campaign.subject || campaign.previewText,
+				html: campaign.template.templateHtml.replace(
+					/{{\s*(\w+)\s*}}/g,
+					(_, placeholder) => contacts[i][templateMappings[placeholder]] || ''
+				),
+				text: campaign.previewText,
+				campaignId: campaignId,
+				contactId: contacts[i]._id,
+				provider: 'free', // Or determine based on user plan
+				senderAddress: user.address, // Pass address for GDPR footer
+				userId: userId
+			});
+		}
 
 		// bugFix
 		// Implement RabbitMQ
