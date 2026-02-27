@@ -2,16 +2,16 @@ import Campaign from '../../../schemas/Campaign.js';
 import Segment from '../../../schemas/Segment.js';
 import Tag from '../../../schemas/Tag.js';
 import { pushNotification } from '../../../utilities/functions.js';
-import Queue from 'bull';
+// import Queue from 'bull';
 
-const emailQueue = new Queue('emails');
-emailQueue.process(async (job, done) => {
-	done(null, 'Email sent')
-});
+// const emailQueue = new Queue('emails');
+// emailQueue.process(async (job, done) => {
+// 	done(null, 'Email sent')
+// });
 
-emailQueue.on('completed', function (job, result) {
-	console.log(job, result)
-})
+// emailQueue.on('completed', function (job, result) {
+// 	console.log(job, result)
+// })
 
 async function send(req, res, next) {
 	try {
@@ -49,18 +49,18 @@ async function send(req, res, next) {
 		}
 
 		const templateMappings = campaign.templateMappings;
-		for (let i = 0; i < contacts.length; i++) {
-			await emailQueue.add({
-				to: contacts[i], // whole contact object
-				from: campaign.from,
-				subject: campaign.subject || campaign.previewText,
-				contentHtml: campaign.template.templateHtml.replace(
-					/{{\s*(\w+)\s*}}/g,
-					(_, placeholder) => contacts[i][templateMappings[placeholder]] || ''
-				),
-				contentText: campaign.previewText,
-			});
-		}
+		// for (let i = 0; i < contacts.length; i++) {
+		// 	await emailQueue.add({
+		// 		to: contacts[i], // whole contact object
+		// 		from: campaign.from,
+		// 		subject: campaign.subject || campaign.previewText,
+		// 		contentHtml: campaign.template.templateHtml.replace(
+		// 			/{{\s*(\w+)\s*}}/g,
+		// 			(_, placeholder) => contacts[i][templateMappings[placeholder]] || ''
+		// 		),
+		// 		contentText: campaign.previewText,
+		// 	});
+		// }
 
 		// bugFix
 		// Implement RabbitMQ
