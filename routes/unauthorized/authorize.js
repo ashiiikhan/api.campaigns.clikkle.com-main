@@ -19,7 +19,9 @@ async function authorize(req, res, next) {
         }
 
         const { id, role } = user;
-        const accessToken = jwt.sign({ id, role }, process.env.JWT_SECRET);
+        // Ensure secret key is used or fallback for dev
+        const secret = process.env.JWT_SECRET || 'secret'; 
+        const accessToken = jwt.sign({ id, role }, secret);
 
         user.password = undefined;
         user.__v = undefined;

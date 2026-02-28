@@ -57,7 +57,7 @@ async function send(req, res, next) {
 				campaignId: campaignId,
 				contactId: contacts[i]._id,
 				provider: 'free', // Or determine based on user plan
-				senderAddress: user.address, // Pass address for GDPR footer
+				senderAddress: senderAddress, // Pass address for GDPR footer
 				userId: userId
 			});
 		}
