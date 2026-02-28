@@ -3,10 +3,15 @@ import User from "../../schemas/User.js";
 
 async function authorize(req, res, next) {
     try {
-        const { username, password } = req.body;
+        const { username, email, password } = req.body;
+
+        const identifier = username || email;
+        if (!identifier) {
+             throw new Error("Username or Email is required");
+        }
 
         const user = await User.findOne({
-            username,
+            $or: [{ username: identifier }, { email: identifier }],
             password,
         });
 
