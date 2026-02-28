@@ -94,6 +94,10 @@ app.use(errorHandler);
 // ----------- Start Server ----------- //
 const port = process.env.PORT || 9000;
 
+console.log("Starting server...");
+console.log("Email Router imported:", !!emailRouter);
+console.log("Unauthorized Router imported:", !!unauthorizedRouter);
+
 // SSL cert paths
 const privateKeyPath = "../ssl/keys/a2b5f_4c331_6fb1491236bab92b40df763e83c2b2c8.key";
 const certificatePath = "../ssl/certs/_wildcard__campaigns_clikkle_com_a2b5f_4c331_1776578526_c2229c019c543cb0efe49f8ddc1a9336.crt";

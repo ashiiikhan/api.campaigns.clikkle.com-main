@@ -9,6 +9,7 @@ import resetPassword from "../routes/unauthorized/resetPassword.js";
 import createPassword from "../routes/unauthorized/createPassword.js";
 import unsubscribe from "../routes/unauthorized/unsubscribe.js";
 
+console.log("Unsubscribe controller imported:", !!unsubscribe);
 
 const testc = (req,res,next) => {
     console.log("testc",req.body);
