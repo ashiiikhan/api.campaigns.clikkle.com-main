@@ -53,14 +53,18 @@ app.use(
   ])
 );
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:9000",
+  "http://localhost:9001",
+  "https://campaigns.clikkle.com",
+  "https://campaigns-staging.vercel.app",
+  process.env.DASHBOARD_URL,
+  process.env.CORS_ORIGIN,
+].filter(Boolean);
+
 const corsOptions = {
-  origin: [
-    "http://localhost:3000",
-    "http://localhost:9000",
-    "http://localhost:9001",
-    "https://campaigns.clikkle.com",
-    "https://campaigns-staging.vercel.app",
-  ],
+  origin: allowedOrigins,
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],

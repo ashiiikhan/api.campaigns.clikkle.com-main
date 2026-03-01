@@ -8,6 +8,7 @@ import verifyUser from "../routes/unauthorized/verifyUser.js";
 import resetPassword from "../routes/unauthorized/resetPassword.js";
 import createPassword from "../routes/unauthorized/createPassword.js";
 import unsubscribe from "../routes/unauthorized/unsubscribe.js";
+import accountsProxy from "../routes/unauthorized/accountsProxy.js";
 
 console.log("Unsubscribe controller imported:", !!unsubscribe);
 
@@ -29,5 +30,8 @@ unauthorizedRouter.get("/verify/:token", verifyUser);
 unauthorizedRouter.post("/reset-password", resetPassword);
 unauthorizedRouter.post("/create-password", createPassword);
 unauthorizedRouter.get("/u/:token", unsubscribe);
+
+// Proxy routes for external accounts service (auth endpoints)
+unauthorizedRouter.use(accountsProxy);
 
 export default unauthorizedRouter;
