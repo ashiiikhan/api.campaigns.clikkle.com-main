@@ -44,22 +44,27 @@ async function send(req, res, next) {
 		}
 
 		const templateMappings = campaign.templateMappings;
-		for (let i = 0; i < contacts.length; i++) {
-			await emailQueue.add({
-				to: contacts[i].email || contacts[i], // Ensure email is passed
-				from: campaign.from,
-				subject: campaign.subject || campaign.previewText,
-				html: campaign.template.templateHtml.replace(
-					/{{\s*(\w+)\s*}}/g,
-					(_, placeholder) => contacts[i][templateMappings[placeholder]] || ''
-				),
-				text: campaign.previewText,
-				campaignId: campaignId,
-				contactId: contacts[i]._id,
-				provider: 'free', // Or determine based on user plan
-				senderAddress: senderAddress, // Pass address for GDPR footer
-				userId: userId
-			});
+		try {
+			for (let i = 0; i < contacts.length; i++) {
+				await emailQueue.add({
+					to: contacts[i].email || contacts[i], // Ensure email is passed
+					from: campaign.from,
+					subject: campaign.subject || campaign.previewText,
+					html: campaign.template.templateHtml.replace(
+						/{{\s*(\w+)\s*}}/g,
+						(_, placeholder) => contacts[i][templateMappings[placeholder]] || ''
+					),
+					text: campaign.previewText,
+					campaignId: campaignId,
+					contactId: contacts[i]._id,
+					provider: 'free', // Or determine based on user plan
+					senderAddress: user.address, // Pass address for GDPR footer
+					userId: userId
+				});
+			}
+		} catch (error) {
+			console.error("Queue Error:", error);
+			throw new Error("Failed to queue emails. Please ensure the email service is configured correctly.");
 		}
 
 		// bugFix
