@@ -3,8 +3,9 @@ import axios from "axios";
 
 const router = new express.Router();
 
+// Central Clikkle accounts API (same as worksuite.clikkle.com)
 const ACCOUNTS_API_URL =
-  process.env.ACCOUNTS_API_URL || "https://api.admin.clikkle.com";
+  process.env.ACCOUNTS_API_URL || "https://accounts.clikkle.com:5000/api";
 
 async function forwardAuthRequest(req, res, next, path) {
   try {
@@ -26,10 +27,12 @@ async function forwardAuthRequest(req, res, next, path) {
   }
 }
 
-router.post("/auth/exist", (req, res, next) =>
-  forwardAuthRequest(req, res, next, "/auth/exist")
+// Email step (check if email exists) – same as official worksuite.clikkle.com
+router.post("/auth/login_email", (req, res, next) =>
+  forwardAuthRequest(req, res, next, "/auth/login_email")
 );
 
+// Password step – same as official worksuite.clikkle.com
 router.post("/auth/login", (req, res, next) =>
   forwardAuthRequest(req, res, next, "/auth/login")
 );
