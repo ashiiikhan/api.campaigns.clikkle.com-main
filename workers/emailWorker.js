@@ -7,7 +7,7 @@ import Contact from '../schemas/Contact.js'; // Assuming you might need to updat
 emailQueue.process(async (job) => {
     const { to, from, subject, html, text, campaignId, contactId, provider, senderAddress } = job.data;
 
-    console.log(`Processing email job ${job.id} for ${to}`);
+    console.log(`Processing email job ${job.id} for ${to} (Provider: ${provider})`);
 
     try {
         // Generate Unsubscribe Token and Link
@@ -36,7 +36,7 @@ emailQueue.process(async (job) => {
 
         const result = await emailService.sendEmail({
             to,
-            from: from.email,
+            from: `"${from.name}" <${from.email}>`,
             subject,
             html: finalHtml,
             text: text + `\n\nUnsubscribe: ${unsubscribeLink}`,
