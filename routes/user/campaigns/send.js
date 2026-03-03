@@ -43,7 +43,7 @@ async function send(req, res, next) {
 			contacts.push(...(await segment.getContacts()).contacts);
 		}
 
-		console.log(`Found ${contacts.length} contacts for campaign ${campaignId}`);
+		console.log("SENDING TO:", contacts.length, "contacts");
 
 		const templateMappings = campaign.templateMappings;
 		try {
