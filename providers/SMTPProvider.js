@@ -6,17 +6,19 @@ class SMTPProvider extends EmailProvider {
         super();
         this.transporter = nodemailer.createTransport({
             host: config.host || process.env.SMTP_HOST,
-            port: 465, // Use Port 465
-            secure: true, // Use SSL
+            port: config.port || process.env.SMTP_PORT || 465,
+            secure: config.secure || (process.env.SMTP_SECURE === 'true') || true, // Default to true (SSL) for reliability
             family: 4, // Force IPv4 to prevent ENETUNREACH on Render
+            tls: { rejectUnauthorized: false }, // Prevent ENETUNREACH on Render
+            connectionTimeout: 10000, // 10 seconds
+            greetingTimeout: 5000, // 5 seconds
+            socketTimeout: 10000, // 10 seconds
+            debug: true, // Enable debug logs
+            logger: true, // Enable logger
             auth: {
                 user: config.user || process.env.SMTP_USER,
                 pass: config.pass || process.env.SMTP_PASS,
-            },
-            tls: { 
-                rejectUnauthorized: false // Prevents certificate handshake timeouts 
-            },
-            connectionTimeout: 10000 // 10 seconds
+            }
         });
         
         console.log(`SMTP Provider initialized with host: ${this.transporter.options.host}, port: ${this.transporter.options.port}, secure: ${this.transporter.options.secure}`);
