@@ -5,11 +5,12 @@ class SMTPProvider extends EmailProvider {
     constructor(config) {
         super();
         this.transporter = nodemailer.createTransport({
-            host: config.host || process.env.SMTP_HOST,
+            host: '142.251.163.108', // This is Gmail's IPv4 address
             port: 465,
             secure: true, // Default to true (SSL) for reliability
             family: 4, // Force IPv4 to prevent ENETUNREACH on Render
             tls: { 
+                servername: 'smtp.gmail.com', // Required for SSL when using IP host
                 rejectUnauthorized: false,
                 minVersion: "TLSv1.2"
              }, // Prevent ENETUNREACH on Render
