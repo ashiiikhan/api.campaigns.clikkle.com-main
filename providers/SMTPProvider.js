@@ -8,6 +8,7 @@ class SMTPProvider extends EmailProvider {
             host: config.host || process.env.SMTP_HOST,
             port: config.port || process.env.SMTP_PORT,
             secure: config.secure || (process.env.SMTP_SECURE === 'true'), // true for 465, false for other ports
+            family: 4, // Force IPv4 to prevent ENETUNREACH on Render
             tls: { rejectUnauthorized: false }, // Prevent ENETUNREACH on Render
             auth: {
                 user: config.user || process.env.SMTP_USER,

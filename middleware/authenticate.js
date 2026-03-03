@@ -10,11 +10,17 @@ async function authenticate(req, res, next) {
         if (!token) throw "Token must be present";
         
         // Verify token (Use secret key in production)
-        const secret = process.env.JWT_SECRET || 'secret';
+        const secret = process.env.JWT_SECRET;
+        if (!secret) {
+            console.warn("WARNING: JWT_SECRET is not set in environment variables. Using default 'secret' which may cause signature validation errors.");
+        }
+        const verifySecret = secret || 'secret';
+        
         let decoded;
         try {
-            decoded = jwt.verify(token, secret);
+            decoded = jwt.verify(token, verifySecret);
         } catch (e) {
+            console.error("JWT Verification Failed:", e.message);
             // Fallback to decode for development if verify fails (e.g. secret mismatch)
             console.warn("Token verification failed, falling back to decode:", e.message);
             decoded = jwt.decode(token);
