@@ -21,9 +21,10 @@ async function authenticate(req, res, next) {
             decoded = jwt.verify(token, verifySecret);
         } catch (e) {
             console.error("JWT Verification Failed:", e.message);
-            // Fallback to decode for development if verify fails (e.g. secret mismatch)
-            console.warn("Token verification failed, falling back to decode:", e.message);
-            decoded = jwt.decode(token);
+            // Fallback to decode removed to enforce security
+            // console.warn("Token verification failed, falling back to decode:", e.message);
+            // decoded = jwt.decode(token);
+            throw new Error("Invalid token signature");
         }
 
         if (!decoded || !decoded.id) throw "Invalid token";
