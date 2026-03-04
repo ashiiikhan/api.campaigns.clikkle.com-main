@@ -1,11 +1,13 @@
 import SMTPProvider from './SMTPProvider.js';
 import SESProvider from './SESProvider.js';
+import ResendProvider from './ResendProvider.js';
 
 class EmailService {
     constructor() {
         this.providers = {
             smtp: new SMTPProvider({}),
-            ses: new SESProvider({})
+            ses: new SESProvider({}),
+            resend: new ResendProvider()
         };
     }
 
@@ -15,8 +17,8 @@ class EmailService {
      * @returns {EmailProvider}
      */
     getProvider(plan = 'free') {
-        if (plan === 'free') {
-            return this.providers.smtp;
+        if (plan === 'free' || plan === 'smtp') {
+            return this.providers.resend;
         } else {
             // Default to SES for paid plans, or fallback to SMTP if SES fails/not configured?
             // For now, sticking to requirements: Paid -> SES

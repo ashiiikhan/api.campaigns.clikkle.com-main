@@ -10,7 +10,7 @@ class SMTPProvider extends EmailProvider {
             secure: true, // Default to true (SSL) for reliability
             family: 4, // Force IPv4 to prevent ENETUNREACH on Render
             tls: { 
-                servername: 'smtp.gmail.com', // Required for SSL when using IP host
+                servername: 'smtp-relay.gmail.com', // Required for SSL when using IP host
                 rejectUnauthorized: false,
                 minVersion: "TLSv1.2"
              }, // Prevent ENETUNREACH on Render
