@@ -1,5 +1,6 @@
 import "./config/config.js";
 import "./workers/emailWorker.js"; // Start Email Worker
+import "./workers/automationWorker.js"; // Start Automation Worker
 import express from "express";
 import cors from "cors";
 import path from "path";

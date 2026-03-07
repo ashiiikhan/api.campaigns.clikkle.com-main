@@ -11,6 +11,7 @@ import report from "./user/report.js";
 import getProfile from "../routes/user/profile/profile.js";
 import notification from "./user/notifications.js";
 import organization from "./user/organization.js";
+import automation from "../routes/user/automations.js";
 
 const userRouter = new express.Router();
 
@@ -31,5 +32,6 @@ userRouter.use("/dashboard", dashboard);
 userRouter.use("/reports", report);
 userRouter.use("/notifications", notification);
 userRouter.use("/organizations", organization);
+userRouter.use("/automations", automation);
 
 export default userRouter;

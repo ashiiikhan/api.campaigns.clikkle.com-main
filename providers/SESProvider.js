@@ -13,8 +13,7 @@ class SESProvider extends EmailProvider {
         });
     }
 
-    async send({ to, from, subject, html, text, headers }) {
-        // TODO: Use SendRawEmailCommand to support custom headers like List-Unsubscribe
+    async send({ to, from, subject, html, text }) {
         const params = {
             Destination: {
                 ToAddresses: [to],
@@ -45,6 +44,12 @@ class SESProvider extends EmailProvider {
             return { success: true, messageId: response.MessageId, provider: 'ses' };
         } catch (error) {
             console.error("Error sending email via SES:", error);
+            
+            if (error.name === 'MessageRejected') {
+                console.error("SES Message Rejected: This often happens if your account is in Sandbox mode and you are sending to an unverified email address, or if the 'From' address is not verified.");
+                console.error("Please verify the recipient email or move your SES account out of Sandbox mode.");
+            }
+
             throw error;
         }
     }
