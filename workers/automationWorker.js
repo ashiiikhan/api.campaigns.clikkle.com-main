@@ -2,7 +2,7 @@ import Queue from 'bull';
 import redisConfig from '../config/redis.js';
 import Automation from '../schemas/Automation.js';
 import SentLog from '../schemas/SentLog.js';
-import emailQueue from './emailQueue.js'; // To trigger email sending
+import emailQueue from '../queues/emailQueue.js'; // To trigger email sending
 import Contact from '../schemas/Contact.js';
 
 const automationQueue = new Queue('automation', {
