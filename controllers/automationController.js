@@ -1,5 +1,76 @@
+import Automation from '../schemas/Automation.js';
+import automationQueue from '../workers/automationWorker.js';
+
+export async function createAutomation(req, res) {
+  try {
+    const { name, workflow, status, triggerType } = req.body;
+    const userId = req.user.id;
+
+    const automation = new Automation({
+      userId,
+      name,
+      workflow,
+      status: status || 'draft',
+      triggerType
+    });
+
+    await automation.save();
+    res.status(201).json({ success: true, automation });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+
+export async function getAutomations(req, res) {
+  try {
+    const automations = await Automation.find({ userId: req.user.id });
+    res.json({ success: true, automations });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+
+export async function getAutomation(req, res) {
+  try {
+    const automation = await Automation.findOne({ _id: req.params.id, userId: req.user.id });
+    if (!automation) return res.status(404).json({ success: false, message: "Automation not found" });
+    res.json({ success: true, automation });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+
+// This function is called when a trigger event occurs (e.g. from another controller)
+export async function triggerWorkflow(triggerType, contactData, userId) {
+  try {
+    // Find active automations with this trigger
+    const automations = await Automation.find({ 
+      userId, 
+      status: 'active',
+    });
+
+    for (const automation of automations) {
+        // Find the trigger node in the workflow
+        const triggerNode = automation.workflow.nodes.find(n => n.type === 'trigger');
+        
+        if (triggerNode) {
+            await automationQueue.add({
+                automationId: automation._id,
+                contactId: contactData._id,
+                nodeId: triggerNode.id,
+                contactData: contactData, // Pass initial data
+                userId: userId
+            });
+            console.log(`Triggered automation ${automation.name} for contact ${contactData.email}`);
+        }
+    }
+  } catch (error) {
+    console.error("Error triggering workflow:", error);
+  }
+}
+
 // Manual trigger for testing
-export const testTrigger = async (req, res) => {
+export async function testTrigger(req, res) {
     try {
         const { automationId, contactId } = req.body;
         const userId = req.user.id;
@@ -23,4 +94,4 @@ export const testTrigger = async (req, res) => {
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
-};
+}
