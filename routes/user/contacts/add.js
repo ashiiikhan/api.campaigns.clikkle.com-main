@@ -1,6 +1,7 @@
 import Contact from '../../../schemas/Contact.js';
 import Tag from '../../../schemas/Tag.js';
 import { pushNotification } from '../../../utilities/functions.js';
+import { triggerWorkflow } from '../../../controllers/automationController.js';
 
 const addContact = async (req, res, next) => {
     try {
@@ -35,6 +36,8 @@ const addContact = async (req, res, next) => {
             title: 'New contact added',
             description: `A new contact ${email} has been added to contacts`,
         });
+
+        await triggerWorkflow('contact_added', contact, req.user.id);
 
         res.json({
             success: 1,

@@ -4,6 +4,7 @@ import Automation from '../schemas/Automation.js';
 import SentLog from '../schemas/SentLog.js';
 import emailQueue from '../queues/emailQueue.js'; // To trigger email sending
 import Contact from '../schemas/Contact.js';
+import Campaign from '../schemas/Campaign.js';
 
 const automationQueue = new Queue('automation', {
     redis: redisConfig,
@@ -30,75 +31,100 @@ automationQueue.process(async (job) => {
             return;
         }
 
-        // --- Execute Node Logic ---
+        const contact = await Contact.findOne({ _id: contactId, userId });
+        if (!contact) {
+            console.log("Contact not found");
+            return;
+        }
+
+        let conditionResult = null;
+        if (node.type === 'condition') {
+            const field = node.data?.condition?.field;
+            const operator = node.data?.condition?.operator;
+            const value = node.data?.condition?.value;
+            const left = contact[field];
+
+            if (operator === 'contains') {
+                conditionResult = String(left || '').toLowerCase().includes(String(value || '').toLowerCase());
+            } else {
+                conditionResult = String(left ?? '').toLowerCase() === String(value ?? '').toLowerCase();
+            }
+        }
+
         if (node.type === 'action') {
-            // Idempotency Check
             const existingLog = await SentLog.findOne({ automationId, contactId, nodeId });
             if (existingLog) {
                 console.log("Action already executed for this node/contact. Skipping.");
                 return;
             }
 
-            // Perform Action (e.g., Send Email)
-            // For MVP, assuming 'action' means 'send email'
-            // In a real app, node.data would contain the action type (email, sms, etc.) and details
-            
-            // We need to fetch contact details to send email
-            const contact = await Contact.findOne({ _id: contactId, userId });
-            
-            if (contact) {
-                // Schedule email
-                // Note: We need campaign details. For this MVP, we might need to assume a template or 
-                // the node data contains subject/body. 
-                // Let's assume the node.data.label is the subject for now or hardcode a welcome message
-                
+            const actionType = node.data?.actionType || 'send_email';
+
+            if (actionType === 'send_campaign' && node.data?.campaignId) {
+                const campaign = await Campaign.findOne({ _id: node.data.campaignId, userId }).populate('template');
+                if (!campaign || !campaign.template) {
+                    await SentLog.create({ automationId, contactId, nodeId, actionType: 'send_campaign', status: 'failed' });
+                    return;
+                }
+
+                const templateMappings = campaign.templateMappings || {};
+                const html = (campaign.template.templateHtml || '').replace(
+                    /{{\s*(\w+)\s*}}/g,
+                    (_, placeholder) => contact[templateMappings[placeholder]] || ''
+                );
+
                 await emailQueue.add({
                     to: contact.email,
-                    from: { name: "Automation", email: "automation@clikkle.com" }, // Should be configurable
-                    subject: "Automated Message: " + node.data.label,
-                    html: "<p>This is an automated message from the builder.</p>",
-                    text: "This is an automated message from the builder.",
-                    campaignId: automationId, // Tracking
+                    from: campaign.from,
+                    subject: campaign.subject || campaign.previewText || node.data?.subject || node.data?.label || 'Campaign',
+                    html,
+                    text: campaign.previewText || node.data?.text || '',
+                    campaignId: campaign._id,
                     contactId: contactId,
                     provider: 'free',
                     senderAddress: "Clikkle Automation",
                     userId: userId
                 });
 
-                // Log Action
-                await SentLog.create({
-                    automationId,
-                    contactId,
-                    nodeId,
-                    actionType: 'email_sent',
-                    status: 'sent'
+                await SentLog.create({ automationId, contactId, nodeId, actionType: 'send_campaign', status: 'sent' });
+            } else {
+                await emailQueue.add({
+                    to: contact.email,
+                    from: { name: "Automation", email: "automation@clikkle.com" },
+                    subject: node.data?.subject || node.data?.label || "Automated Message",
+                    html: node.data?.html || "<p>This is an automated message.</p>",
+                    text: node.data?.text || "This is an automated message.",
+                    campaignId: automationId,
+                    contactId: contactId,
+                    provider: 'free',
+                    senderAddress: "Clikkle Automation",
+                    userId: userId
                 });
+
+                await SentLog.create({ automationId, contactId, nodeId, actionType: 'send_email', status: 'sent' });
             }
         }
 
         // --- Find Next Nodes ---
         const outgoingEdges = automation.workflow.edges.filter(e => e.source === nodeId);
+        const edgesToFollow = node.type === 'condition'
+            ? outgoingEdges.filter((e) => String(e.data?.branch || e.label || '').toLowerCase() === (conditionResult ? 'true' : 'false'))
+            : outgoingEdges;
         
-        for (const edge of outgoingEdges) {
+        for (const edge of edgesToFollow) {
             const nextNodeId = edge.target;
             const nextNode = automation.workflow.nodes.find(n => n.id === nextNodeId);
             
             if (!nextNode) continue;
 
             if (nextNode.type === 'delay') {
-                // Parse delay from label (e.g., "Wait 1 Hour")
-                // Simple parsing for MVP: Check for "Hour", "Minute"
-                let delay = 0;
-                const label = nextNode.data.label.toLowerCase();
-                if (label.includes('hour')) delay = 1000 * 60 * 60;
-                else if (label.includes('minute')) delay = 1000 * 60;
-                else delay = 1000 * 10; // Default 10 seconds
-
-                // Schedule next job with delay
-                // Note: The job for the delay node itself is just a pass-through that waits
-                // Then it should trigger the node AFTER the delay.
-                // Or simpler: Schedule the job for the *target of the delay node* with a delay?
-                // No, better to schedule the DelayNode job with delay, then it processes and moves next.
+                let delay = Number(nextNode.data?.delayMs);
+                if (!Number.isFinite(delay) || delay < 0) {
+                    const label = String(nextNode.data?.label || '').toLowerCase();
+                    if (label.includes('hour')) delay = 1000 * 60 * 60;
+                    else if (label.includes('minute')) delay = 1000 * 60;
+                    else delay = 1000 * 10;
+                }
                 
                 await automationQueue.add({
                     automationId,

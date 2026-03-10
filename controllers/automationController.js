@@ -40,29 +40,47 @@ export async function getAutomation(req, res) {
   }
 }
 
+export async function updateAutomation(req, res) {
+  try {
+    const userId = req.user.id;
+    const { name, workflow, status, triggerType } = req.body;
+
+    const automation = await Automation.findOne({ _id: req.params.id, userId });
+    if (!automation) return res.status(404).json({ success: false, message: "Automation not found" });
+
+    if (typeof name === 'string') automation.name = name;
+    if (workflow) automation.workflow = workflow;
+    if (status) automation.status = status;
+    if (typeof triggerType === 'string') automation.triggerType = triggerType;
+    automation.updatedAt = new Date();
+
+    await automation.save();
+    res.json({ success: true, automation });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+
 // This function is called when a trigger event occurs (e.g. from another controller)
 export async function triggerWorkflow(triggerType, contactData, userId) {
   try {
-    // Find active automations with this trigger
-    const automations = await Automation.find({ 
-      userId, 
+    const automations = await Automation.find({
+      userId,
       status: 'active',
+      $or: [{ triggerType: null }, { triggerType }],
     });
 
     for (const automation of automations) {
-        // Find the trigger node in the workflow
-        const triggerNode = automation.workflow.nodes.find(n => n.type === 'trigger');
-        
-        if (triggerNode) {
-            await automationQueue.add({
-                automationId: automation._id,
-                contactId: contactData._id,
-                nodeId: triggerNode.id,
-                contactData: contactData, // Pass initial data
-                userId: userId
-            });
-            console.log(`Triggered automation ${automation.name} for contact ${contactData.email}`);
-        }
+      const triggerNode = automation.workflow?.nodes?.find((n) => n.type === 'trigger');
+      if (!triggerNode) continue;
+
+      await automationQueue.add({
+        automationId: automation._id,
+        contactId: contactData._id,
+        nodeId: triggerNode.id,
+        userId: userId
+      });
+      console.log(`Triggered automation ${automation.name} for contact ${contactData.email}`);
     }
   } catch (error) {
     console.error("Error triggering workflow:", error);
