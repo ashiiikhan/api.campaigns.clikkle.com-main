@@ -1,5 +1,7 @@
 import Automation from '../schemas/Automation.js';
 import automationQueue from '../workers/automationWorker.js';
+import Contact from '../schemas/Contact.js';
+import mongoose from 'mongoose';
 
 export async function createAutomation(req, res) {
   try {
@@ -96,14 +98,42 @@ export async function testTrigger(req, res) {
         const automation = await Automation.findOne({ _id: automationId, userId });
         if (!automation) return res.status(404).json({ success: false, message: "Automation not found" });
 
-        // Find the trigger node
         const triggerNode = automation.workflow.nodes.find(n => n.type === 'trigger');
         if (!triggerNode) return res.status(400).json({ success: false, message: "No trigger node found in automation" });
 
-        // Add to queue
+        let resolvedContactId = contactId;
+        if (!resolvedContactId) {
+            const latestContact = await Contact.findOne({ userId }).sort({ dateAdded: -1, _id: -1 });
+            if (!latestContact) {
+                console.log('test-trigger: no contactId provided and no contacts found for userId:', userId);
+                return res.status(404).json({ success: false, message: "No contacts found for this user" });
+            }
+            resolvedContactId = latestContact._id.toString();
+            console.log('test-trigger: auto-picked most recent contactId:', resolvedContactId);
+        }
+
+        if (!mongoose.Types.ObjectId.isValid(resolvedContactId)) {
+            console.log('test-trigger: invalid contactId format:', resolvedContactId);
+            return res.status(400).json({ success: false, message: "Invalid contactId" });
+        }
+
+        const contactQuery = { _id: mongoose.Types.ObjectId(resolvedContactId), userId: mongoose.Types.ObjectId(userId) };
+        console.log('test-trigger: contactQuery:', contactQuery);
+
+        const contact = await Contact.findOne(contactQuery);
+        if (!contact) {
+            const exists = await Contact.findById(resolvedContactId);
+            if (!exists) {
+                console.log('test-trigger: contact not found because ID does not exist:', resolvedContactId);
+                return res.status(404).json({ success: false, message: "Contact not found (ID does not exist)" });
+            }
+            console.log('test-trigger: contact exists but userId does not match. contact.userId:', String(exists.userId), 'auth.userId:', String(userId));
+            return res.status(403).json({ success: false, message: "Contact not found for this user (userId mismatch)" });
+        }
+
         await automationQueue.add({
             automationId: automation._id,
-            contactId: contactId, // This should be a valid contact ID
+            contactId: resolvedContactId,
             nodeId: triggerNode.id,
             userId: userId
         });
