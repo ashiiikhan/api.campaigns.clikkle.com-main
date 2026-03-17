@@ -14,6 +14,26 @@ class SESProvider extends EmailProvider {
     }
 
     async send({ to, from, subject, html, text }) {
+
+        // ✅ Footer (professional + anti-spam friendly)
+        const footer = `
+        <hr style="margin-top:20px; border:none; border-top:1px solid #ddd;" />
+
+        <div style="font-size:12px; color:#666; line-height:1.6;">
+            You are receiving this email because you signed up on our platform.<br><br>
+
+            <strong>Your Company Name</strong><br>
+            Karachi, Pakistan<br><br>
+
+            <a href="https://yourdomain.com/unsubscribe" style="color:#007bff; text-decoration:none;">
+                Unsubscribe
+            </a>
+        </div>
+        `;
+
+        // ✅ Attach footer to original HTML
+        const finalHtml = (html || "") + footer;
+
         const params = {
             Destination: {
                 ToAddresses: [to],
@@ -22,11 +42,11 @@ class SESProvider extends EmailProvider {
                 Body: {
                     Html: {
                         Charset: "UTF-8",
-                        Data: html,
+                        Data: finalHtml, // ✅ footer included
                     },
                     Text: {
                         Charset: "UTF-8",
-                        Data: text || "",
+                        Data: text || "You received this email because you signed up.",
                     },
                 },
                 Subject: {
@@ -40,14 +60,23 @@ class SESProvider extends EmailProvider {
         try {
             const command = new SendEmailCommand(params);
             const response = await this.client.send(command);
+
             console.log("Message sent via SES:", response.MessageId);
-            return { success: true, messageId: response.MessageId, provider: 'ses' };
+
+            return {
+                success: true,
+                messageId: response.MessageId,
+                provider: 'ses'
+            };
+
         } catch (error) {
             console.error("Error sending email via SES:", error);
-            
+
             if (error.name === 'MessageRejected') {
-                console.error("SES Message Rejected: This often happens if your account is in Sandbox mode and you are sending to an unverified email address, or if the 'From' address is not verified.");
-                console.error("Please verify the recipient email or move your SES account out of Sandbox mode.");
+                console.error("SES Message Rejected:");
+                console.error("- Verify sender email");
+                console.error("- Verify recipient (if in sandbox)");
+                console.error("- Check SES production access");
             }
 
             throw error;
