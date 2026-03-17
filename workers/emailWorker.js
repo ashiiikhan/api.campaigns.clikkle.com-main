@@ -21,7 +21,7 @@ emailQueue.process(async (job) => {
             <hr/>
             <p style="font-size: 12px; color: #666;">
                 You are receiving this email because you subscribed to our list.<br/>
-                <b>Our Address:</b> ${senderAddress || 'Not Provided'}<br/>
+                <b>Our Address:</b> ${senderAddress || 'info@clikkle.com'}<br/>
                 <a href="${unsubscribeLink}">Unsubscribe</a>
             </p>
         `;
