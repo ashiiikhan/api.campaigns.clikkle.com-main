@@ -16,6 +16,34 @@ class SESProvider extends EmailProvider {
   }
 
   async send({ to, from, subject, html, text }) {
+
+    // ✅ 1. Dynamic Footer Function
+    const getFooter = (email) => {
+      return `
+      <hr style="margin-top:20px; border:none; border-top:1px solid #ddd;" />
+
+      <div style="font-size:12px; color:#666; line-height:1.6;">
+        You are receiving this email because ${email} subscribed.<br><br>
+
+        <strong>Your Company</strong><br>
+        Karachi, Pakistan<br><br>
+
+        <a href="#" style="color:#007bff; text-decoration:none;">
+          Unsubscribe
+        </a>
+      </div>
+      `;
+    };
+
+    // ✅ 2. Safety check (important)
+    if (!html) {
+      throw new Error("HTML content is required");
+    }
+
+    // ✅ 3. Attach footer
+    const footer = getFooter(to);
+    const finalHtml = html + footer;
+
     const params = {
       Destination: {
         ToAddresses: [to],
@@ -24,11 +52,11 @@ class SESProvider extends EmailProvider {
         Body: {
           Html: {
             Charset: "UTF-8",
-            Data: html,
+            Data: finalHtml, // ✅ footer added here
           },
           Text: {
             Charset: "UTF-8",
-            Data: text || "",
+            Data: text || "You received this email because you signed up.",
           },
         },
         Subject: {
@@ -54,12 +82,10 @@ class SESProvider extends EmailProvider {
       console.error("Error sending email via SES:", error);
 
       if (error.name === "MessageRejected") {
-        console.error(
-          "SES Message Rejected: This often happens if your account is in Sandbox mode and you are sending to an unverified email address, or if the 'From' address is not verified."
-        );
-        console.error(
-          "Please verify the recipient email or move your SES account out of Sandbox mode."
-        );
+        console.error("SES Message Rejected:");
+        console.error("- Verify sender email");
+        console.error("- Verify recipient email (sandbox)");
+        console.error("- Check SES production access");
       }
 
       throw error;
