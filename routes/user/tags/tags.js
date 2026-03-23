@@ -1,9 +1,10 @@
+import mongoose from 'mongoose';
 import DataSource from '../../../classes/DataSource.js';
 import Tag from '../../../schemas/Tag.js';
 
 const tags = async (req, res, next) => {
 	try {
-		const userId = req.user.id;
+		const userId = mongoose.Types.ObjectId(req.user.id);
 		const dataSource = new DataSource(Tag, req.query);
 
 		const tags = await dataSource.find({ userId });

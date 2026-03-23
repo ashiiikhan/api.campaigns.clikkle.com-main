@@ -5,7 +5,7 @@ import { flattern } from '../../../utilities/functions.js';
 
 async function contactsDashboard(req, res, next) {
 	try {
-		const { id: userId } = req.user;
+		const userId = mongoose.Types.ObjectId(req.user.id);
 		const prevMonthTime = new Date();
 		prevMonthTime.setTime(
 			prevMonthTime.getTime() - 30 * 24 * 60 * 60 * 1000

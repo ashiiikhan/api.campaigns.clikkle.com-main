@@ -1,15 +1,12 @@
 import Campaign from '../../../schemas/Campaign.js';
 import Segment from '../../../schemas/Segment.js';
 import Tag from '../../../schemas/Tag.js';
-import User from '../../../schemas/User.js'; // Import User schema
 import { pushNotification } from '../../../utilities/functions.js';
 import emailQueue from '../../../queues/emailQueue.js';
 
 async function send(req, res, next) {
 	try {
 		const userId = req.user.id;
-		const user = await User.findById(userId); // Fetch User
-		if (!user) throw new Error('User not found');
 		
 		const campaignId = req.params.id;
 
@@ -60,7 +57,7 @@ async function send(req, res, next) {
 					campaignId: campaignId,
 					contactId: contacts[i]._id,
 					provider: 'free', // Or determine based on user plan
-					senderAddress: user.address, // Pass address for GDPR footer
+					senderAddress: 'info@clikkle.com',
 					userId: userId
 				});
 			}

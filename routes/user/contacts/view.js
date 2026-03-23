@@ -3,7 +3,7 @@ import Contact from "../../../schemas/Contact.js";
 
 async function view(req, res, next) {
     try {
-        const { id: userId } = req.user;
+        const userId = mongoose.Types.ObjectId(req.user.id);
         const { id } = req.params;
         const [contact] = await Contact.aggregate([
             {
